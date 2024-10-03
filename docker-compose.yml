@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  produit-service:
+    build:
+      context: ./ProduitService
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    networks:
+      - microservices-network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:devDb
+
+  commande-service:
+    build:
+      context: ./CommandeService
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    networks:
+      - microservices-network
+    environment:
+      - PRODUIT_SERVICE_URL=http://produit-service:8081/products/
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:devDb
+networks:
+  microservices-network:
+    driver: bridge
